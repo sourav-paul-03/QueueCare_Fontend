@@ -1,0 +1,15 @@
+{
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "routes": [
+    { "src": "/src/(.*)", "dest": "/src/$1" },
+    { "src": "/public/(.*)", "dest": "/public/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
+  "env": {
+    "VITE_API_BASE_URL": "https://api.queuecare.com/api/v1",
+    "VITE_WS_URL": "https://api.queuecare.com"
+  }
+}

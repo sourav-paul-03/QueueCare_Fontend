@@ -4,6 +4,7 @@ import { queueApi } from '../../lib/api'
 export default function StaffDashboard() {
   const [queueState, setQueueState] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const doctorClinicId = 1
   const date = new Date().toISOString().split('T')[0]
 
@@ -13,11 +14,35 @@ export default function StaffDashboard() {
 
   const loadQueue = async () => {
     try {
+      setLoading(true)
       const res = await queueApi.getSessionState(doctorClinicId, date)
       setQueueState(res.data)
-    } catch (err) {
-      console.error(err)
+      setError(null)
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to load queue')
     } finally { setLoading(false) }
+  }
+
+  const callNext = async () => {
+    try {
+      await queueApi.callNext({
+        doctorClinicId,
+        date,
+        expectedVersion: queueState?.session?.version || 0,
+      })
+      loadQueue()
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to call next patient')
+    }
+  }
+
+  const checkIn = async (tokenId: number) => {
+    try {
+      await queueApi.checkIn({ tokenId })
+      loadQueue()
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Check-in failed')
+    }
   }
 
   if (loading) {
@@ -26,10 +51,19 @@ export default function StaffDashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Staff Dashboard</h1>
-        <p className="text-gray-600">Manage queue and patient check-ins</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Staff Dashboard</h1>
+          <p className="text-gray-600">Manage queue and patient check-ins</p>
+        </div>
+        <button onClick={callNext} className="btn-primary">
+          Call Next Patient
+        </button>
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
@@ -63,7 +97,7 @@ export default function StaffDashboard() {
                   </div>
                   <div className="flex items-center gap-2 ml-auto">
                     <span className="badge bg-yellow-100 text-yellow-700">WAITING</span>
-                    <button className="text-sm text-blue-600 hover:text-blue-700">Call</button>
+                    <button onClick={() => checkIn(token.id)} className="text-sm text-blue-600 hover:text-blue-700">Check-in</button>
                   </div>
                 </div>
               ))}
@@ -71,6 +105,13 @@ export default function StaffDashboard() {
           )}
         </div>
       </div>
+
+      {queueState?.currentToken && (
+        <div className="bg-blue-50 border border-blue-100 rounded-lg p-6">
+          <h3 className="font-semibold text-gray-900">Currently in Consultation</h3>
+          <p className="text-lg font-bold">{queueState.currentToken.tokenPrefix}-{queueState.currentToken.tokenNumber}</p>
+        </div>
+      )}
     </div>
   )
 }

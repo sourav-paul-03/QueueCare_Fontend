@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { queueApi } from '../lib/api'
-import { getSocket, connectSocket, disconnectSocket, joinQueueRoom, leaveQueueRoom } from '../lib/socket'
+import { getSocket, connectSocket, joinQueueRoom, leaveQueueRoom } from '../lib/socket'
 import type { QueueState } from '../types'
 
 export const useQueue = (doctorClinicId: number, date?: string, mode: 'DISPLAY' | 'STAFF' | 'PATIENT' = 'PATIENT') => {

@@ -1,10 +1,12 @@
 /// <reference types="vite/client" />
 
-declare module '*.css' {
-  const content: string
-  export default content
-}
-declare module '*.scss' {
-  const content: string
-  export default content
-}
+declare module '*.css' {}
+declare module '*.scss' {}
+declare module '*.sass' {}
+declare module '*.less' {}
+declare module '*.svg' {}
+declare module '*.png' {}
+declare module '*.jpg' {}
+declare module '*.jpeg' {}
+declare module '*.gif' {}
+declare module '*.webp' {}

@@ -44,28 +44,24 @@ function App() {
           {!isAuthenticated ? (
             <Route path="*" element={<Navigate to="/login" replace />} />
           ) : (
-            <>
-              <Route path="/" element={<Layout />}>
-                <Routes>
-                  <Route path="dashboard" element={<PatientDashboard />} />
-                  <Route path="appointments/book" element={<BookAppointment />} />
-                  <Route path="appointments/my" element={<MyAppointments />} />
-                  <Route path="search" element={<DoctorSearch />} />
-                  <Route path="queue/live" element={<QueueLiveView />} />
-                  <Route path="staff/dashboard" element={<StaffDashboard />} />
-                  <Route path="doctor/dashboard" element={<DoctorDashboard />} />
-                  <Route path="admin/dashboard" element={<AdminDashboard />} />
-                  <Route path="admin/clinics" element={<ClinicManagement />} />
-                  <Route path="analytics" element={<AnalyticsDashboard />} />
-                  <Route path="notifications" element={<NotificationsPage />} />
-                  <Route path="reviews" element={<ReviewsPage />} />
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route path="unauthorized" element={<div className="p-10 text-center"><h2 className="text-xl font-semibold">Unauthorized</h2><p>You do not have access to this page.</p></div>} />
-                  <Route index element={<Navigate to="/dashboard" replace />} />
-                </Routes>
-              </Route>
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </>
+            <Route path="/" element={<Layout />}>
+              <Route path="dashboard" element={<PatientDashboard />} />
+              <Route path="appointments/book" element={<BookAppointment />} />
+              <Route path="appointments/my" element={<MyAppointments />} />
+              <Route path="search" element={<DoctorSearch />} />
+              <Route path="queue/live" element={<QueueLiveView />} />
+              <Route path="staff/dashboard" element={<StaffDashboard />} />
+              <Route path="doctor/dashboard" element={<DoctorDashboard />} />
+              <Route path="admin/dashboard" element={<AdminDashboard />} />
+              <Route path="admin/clinics" element={<ClinicManagement />} />
+              <Route path="analytics" element={<AnalyticsDashboard />} />
+              <Route path="notifications" element={<NotificationsPage />} />
+              <Route path="reviews" element={<ReviewsPage />} />
+              <Route path="profile" element={<ProfilePage />} />
+              <Route path="unauthorized" element={<div className="p-10 text-center"><h2 className="text-xl font-semibold">Unauthorized</h2><p>You do not have access to this page.</p></div>} />
+              <Route index element={<Navigate to="/dashboard" replace />} />
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Route>
           )}
         </Routes>
       </div>

@@ -32,15 +32,18 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem('queuecare_refresh_token')
       
       try {
-        const response = await api.post<{ tokens: AuthTokens }>('/auth/refresh', {
+        const response = await api.post<any>('/auth/refresh', {
           refreshToken,
         })
-        const { tokens } = response.data
-        localStorage.setItem('queuecare_access_token', tokens.accessToken)
-        localStorage.setItem('queuecare_refresh_token', tokens.refreshToken)
+        const data = response.data
+        const accessToken = data.tokens?.accessToken || data.accessToken
+        const newRefreshToken = data.tokens?.refreshToken || data.refreshToken
+        
+        localStorage.setItem('queuecare_access_token', accessToken)
+        localStorage.setItem('queuecare_refresh_token', newRefreshToken)
         
         if (originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${tokens.accessToken}`
+          originalRequest.headers.Authorization = `Bearer ${accessToken}`
         }
         return api(originalRequest)
       } catch (refreshError) {

@@ -18,11 +18,14 @@ export default function OtpVerifyPage() {
     setError('')
     try {
       const res = await authApi.verifyOtp({ identifier, code })
-      const { tokens, user } = res.data
-      login(tokens.accessToken, tokens.refreshToken, user)
+      const data = res.data
+      const accessToken = data.tokens?.accessToken || data.accessToken
+      const refreshToken = data.tokens?.refreshToken || data.refreshToken
+      const user = data.user
+      login(accessToken, refreshToken, user)
       navigate('/dashboard')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid code')
+      setError(err.response?.data?.message || err.message || 'Invalid code')
     } finally {
       setLoading(false)
     }

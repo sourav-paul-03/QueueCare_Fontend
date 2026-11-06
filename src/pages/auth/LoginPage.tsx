@@ -18,11 +18,14 @@ export default function LoginPage() {
     setError('')
     try {
       const res = await authApi.login({ identifier, password })
-      const { tokens, user } = res.data
-      login(tokens.accessToken, tokens.refreshToken, user)
+      const data = res.data
+      const accessToken = data.tokens?.accessToken || data.accessToken
+      const refreshToken = data.tokens?.refreshToken || data.refreshToken
+      const user = data.user
+      login(accessToken, refreshToken, user)
       navigate('/dashboard')
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed')
+      setError(err.response?.data?.message || err.message || 'Login failed')
     } finally {
       setLoading(false)
     }

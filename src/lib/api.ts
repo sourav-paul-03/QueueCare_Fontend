@@ -21,9 +21,14 @@ api.interceptors.request.use(
   (error) => Promise.reject(error),
 )
 
-// Response interceptor to handle 401 and refresh token
+// Response interceptor to unwrap success envelope and handle 401 refresh
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response.data && typeof response.data === 'object' && response.data.success === true && 'data' in response.data) {
+      response.data = response.data.data
+    }
+    return response
+  },
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean }
     

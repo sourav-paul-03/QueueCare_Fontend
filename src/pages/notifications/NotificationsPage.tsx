@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { notificationsApi } from '../../lib/api'
-import { useAuth } from '../../contexts/AuthContext'
 
 export default function NotificationsPage() {
   const [notifications, setNotifications] = useState<any[]>([])
@@ -8,8 +7,6 @@ export default function NotificationsPage() {
   const [deviceToken, setDeviceToken] = useState('')
   const [platform, setPlatform] = useState('WEB')
   const [registerLoading, setRegisterLoading] = useState(false)
-  const { user } = useAuth()
-
   useEffect(() => {
     loadNotifications()
   }, [])
